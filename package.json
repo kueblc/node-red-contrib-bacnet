@@ -49,7 +49,8 @@
       "BACnet-Instance": "bacnet/bacnet-instance.js",
       "BACnet-Read": "bacnet/bacnet-read.js",
       "BACnet-Write": "bacnet/bacnet-write.js",
-      "BACnet-Command": "bacnet/bacnet-command.js"
+      "BACnet-Command": "bacnet/bacnet-command.js",
+      "BACnet-Resolve": "bacnet/bacnet-resolve.js"
     }
   },
   "engines": {

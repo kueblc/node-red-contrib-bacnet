@@ -21,18 +21,16 @@ module.exports = function (RED) {
 
     const node = this
     node.devices = []
+    node.nmap = {}
+    node.pendingResolution = {}
 
     function setupClient () {
       node.client = new BACnet({ adpuTimeout: node.adpuTimeout, port: node.port, interface: node.interface, broadcastAddress: node.broadcastAddress })
 
       node.client.on('iAm', (device) => {
         node.devices.push(device)
-        bacnetCore.internalDebugLog('iAm Event')
-        bacnetCore.internalDebugLog('address: ', device.address)
-        bacnetCore.internalDebugLog('deviceId: ', device.deviceId)
-        bacnetCore.internalDebugLog('maxAdpu: ', device.maxAdpu)
-        bacnetCore.internalDebugLog('segmentation: ', device.segmentation)
-        bacnetCore.internalDebugLog('vendorId: ', device.vendorId)
+        bacnetCore.internalDebugLog('iAm Event', device)
+        node.cacheDeviceAddress(device)
       })
 
       node.client.on('timeout', function () {
@@ -80,6 +78,42 @@ module.exports = function (RED) {
       node.devices = []
       node.client.whoIs()
       setTimeout(cb, 3000)
+    }
+
+    node.cacheDeviceAddress = function (device) {
+      const { deviceId } = device.payload
+      const { address, net, adr } = device.header.sender
+      const deviceAddress = {
+        address,
+        net,
+        adr,
+        lastUpdated: Date.now()
+      }
+      node.nmap[deviceId] = deviceAddress
+
+      if (deviceId in node.pendingResolution) {
+        const pending = node.pendingResolution[deviceId]
+        delete node.pendingResolution[deviceId]
+        for (const cb of pending) {
+          cb(deviceAddress)
+        }
+      }
+    }
+
+    node.getDeviceAddressById = function (deviceId, cb) {
+      if (deviceId in node.nmap) {
+        const deviceAddress = node.nmap[deviceId]
+        cb(deviceAddress)
+      } else {
+        console.log('getDeviceAddressById cache miss', deviceId)
+        const pending = node.pendingResolution[deviceId] = node.pendingResolution[deviceId] || []
+        if (pending.push(cb) === 1) {
+          node.client.whoIs({
+            lowLimit: deviceId,
+            highLimit: deviceId
+          })
+        }
+      }
     }
   }
 
