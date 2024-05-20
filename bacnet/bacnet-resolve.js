@@ -1,0 +1,2 @@
+"use strict";module.exports=function(n){n.nodes.registerType("BACnet-Resolve",function(e){var d=this;n.nodes.createNode(d,e),d.name=e.name,d.connector=n.nodes.getNode(e.server),d.connector&&d.status({fill:"green",shape:"dot",text:"active"}),d.on("input",function(t){d.connector?d.connector.getDeviceAddressById(t.payload.deviceId,function(e){var n=e.address,o=e.net,e=e.adr;t.payload.deviceIPAddress={address:n,net:o,adr:e},d.send(t)}):d.error(new Error("Client Not Ready To Read"),t)})})};
+//# sourceMappingURL=maps/bacnet-resolve.js.map
