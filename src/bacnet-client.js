@@ -99,7 +99,7 @@ module.exports = function (RED) {
       }
     }
 
-    node.getDeviceAddressById = function (deviceId, cb) {
+    node.getDeviceAddressById = function (deviceId, cb, errorCb) {
       if (deviceId in node.nmap) {
         const deviceAddress = node.nmap[deviceId]
         cb(deviceAddress)
@@ -111,6 +111,13 @@ module.exports = function (RED) {
             lowLimit: deviceId,
             highLimit: deviceId
           })
+          setTimeout(function () {
+            if (deviceId in node.pendingResolution) {
+              console.error('getDeviceAddressById timeout', deviceId)
+              delete node.pendingResolution[deviceId]
+              errorCb && errorCb()
+            }
+          }, node.adpuTimeout)
         }
       }
     }

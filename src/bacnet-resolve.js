@@ -30,6 +30,9 @@ module.exports = function (RED) {
         function ({ address, net, adr }) {
           msg.payload.deviceIPAddress = { address, net, adr }
           node.send(msg)
+        },
+        function () {
+          node.error(new Error('Device Not Found'), msg)
         }
       )
     })
