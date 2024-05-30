@@ -25,8 +25,12 @@ module.exports = function (RED) {
     this.highLimit = config.highLimit || null
     this.credentials = config.credentials
 
-    this.device = RED.nodes.getNode(config.device)
-    this.deviceIPAddress = this.device.deviceAddress || '127.0.0.1'
+    if (config.device) {
+      this.device = RED.nodes.getNode(config.device)
+      this.deviceIPAddress = this.device.deviceAddress
+    } else {
+      this.deviceIPAddress = '127.0.0.1'
+    }
 
     this.connector = RED.nodes.getNode(config.server)
 
