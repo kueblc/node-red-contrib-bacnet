@@ -37,7 +37,7 @@ module.exports = function (RED) {
         bacnetCore.internalDebugLog('timeout')
       })
 
-      node.client.whoIs()
+      node.client.whoIs({ net: 0xffff })
 
       node.client.on('error', function (err) {
         node.error(err, { payload: 'BACnet Client Error' })
@@ -63,20 +63,19 @@ module.exports = function (RED) {
       done()
     })
 
-    node.whoIsExplicit = function (lowLimit, highLimit, deviceIPAddress, cb) {
+    node.whoIsExplicit = function (lowLimit, highLimit, address, cb) {
       node.devices = []
       const options = {
         lowLimit,
         highLimit,
-        deviceIPAddress
       }
-      node.client.whoIs(options)
+      node.client.whoIs({ net: 0xffff, address }, options)
       setTimeout(cb, 3000)
     }
 
     node.whoIs = function (cb) {
       node.devices = []
-      node.client.whoIs()
+      node.client.whoIs({ net: 0xffff })
       setTimeout(cb, 3000)
     }
 
@@ -108,7 +107,7 @@ module.exports = function (RED) {
         console.log('getDeviceAddressById cache miss', deviceId)
         const pending = node.pendingResolution[deviceId] = node.pendingResolution[deviceId] || []
         if (pending.push(cb) === 1) {
-          node.client.whoIs({
+          node.client.whoIs({ net: 0xffff }, {
             lowLimit: deviceId,
             highLimit: deviceId
           })
