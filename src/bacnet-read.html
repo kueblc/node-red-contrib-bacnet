@@ -13,9 +13,9 @@
     defaults: {
       name: {value: ''},
       objectType: {value: ''},
-      instance: {type: "BACnet-Instance"},
+      instance: {type: "BACnet-Instance", required:false},
       propertyId: {value: ''},
-      device: {type: "BACnet-Device"},
+      device: {type: "BACnet-Device", required:false},
       server: {type: "BACnet-Client", required:true},
       multipleRead: {value: false}
     },
