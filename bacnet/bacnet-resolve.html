@@ -1,0 +1,21 @@
+<!--
+ The MIT License
+
+ Copyright (c) 2024 Colin Kuebler (kueblc)
+ All rights reserved.
+ node-red-contrib-bacnet
+--> <script type='text/javascript'>
+RED.nodes.registerType("BACnet-Resolve",{category:"BACnet",color:"#16BAC4",defaults:{name:{value:""},server:{type:"BACnet-Client",required:!0},timeout:{value:1200},cacheTtl:{value:864e5}},inputs:1,outputs:1,align:"right",icon:"bacnet-icon.png",label:function(){return this.name||"BACnet Resolve"},labelStyle:function(){return this.name?"node_label_italic":""}})
+</script> <script type='text/x-red' data-template-name='BACnet-Resolve'>
+ <div class='form-row'> <label for='node-input-name'><i class='icon-tag'></i> <span 
+data-i18n='node-red:common.label.name'></span></label> <input type='text' id='node-input-name' placeholder=''> </div> 
+<div class='form-row'> <label for='node-input-server'><i class='icon-globe'></i> <span 
+data-i18n='bacnet-contrib.label.server'></span></label> <input type='text' id='node-input-server'> </div> <hr> <div 
+class='form-row'> <label for='node-input-timeout'><i class='icon-hourglass'></i> <span 
+data-i18n='bacnet-contrib.label.timeout'></span></label> <input type='text' id='node-input-timeout'> </div> <div 
+class='form-row'> <label for='node-input-cacheTtl'><i class='icon-hourglass'></i> <span 
+data-i18n='bacnet-contrib.label.cacheTtl'></span></label> <input type='text' id='node-input-cacheTtl'> </div> </script> 
+<script type='text/x-red' data-help-name='BACnet-Resolve'>
+ <h2>BACnet Resolve node</h2> <p>Locate a device by its device ID.</p> <h4>Input</h4> <p>msg.payload.deviceId</p> <h4>
+Output</h4> <p>msg.payload.deviceIPAddress.address</p> <p>msg.payload.deviceIPAddress.net</p> <p>
+msg.payload.deviceIPAddress.adr</p> </script> 
